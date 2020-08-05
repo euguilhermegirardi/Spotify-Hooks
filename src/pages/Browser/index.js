@@ -1,24 +1,29 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
+import { Container, Title, List, Playlist } from './styles';
+
 export default function Browser() {
   const playlists = useSelector(state => state.reducers);
 
   console.log(playlists);
 
   return (
-    <>
-      <h1>Test</h1>
+    <Container>
+      <Title>Playlists</Title>
 
-      <div>
+      <List>
       {playlists.data.map(playlist => (
-        <ul key={playlist.id}>
-
-            <li>{playlist.title}</li>
-
-        </ul>
+        <Playlist key={playlist.id} to={`/playlist/${playlist.id}`}>
+          <img
+            src={playlist.thumbnail}
+            alt={playlist.title}
+          />
+          <strong>{playlist.title}</strong>
+          <p>{playlist.description}</p>
+        </Playlist>
       ))}
-      </div>
-    </>
+      </List>
+    </Container>
   )
 }
