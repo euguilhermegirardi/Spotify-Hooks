@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { Wrapper, Container, Content } from './styles/components';
 import GlobalStyle from './styles/global';
 import Sidebar from './components/Sidebar/index';
+import ErrorBox from './components/ErrorBox';
 import Header from './components/Header/index';
 import Routes from './routes';
 import Player from './components/Player/index';
@@ -19,6 +20,7 @@ function App() {
         <Container>
           <Sidebar />
           <Content>
+            <ErrorBox />
             <Header/>
             <Routes />
           </Content>
