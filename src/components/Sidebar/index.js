@@ -6,7 +6,7 @@ import { Container, NewPlaylist, Nav } from "./styles";
 import AddPlaylistIcon from "../../assets/images/add_playlist.svg";
 
 export default function Sidebar() {
-  const playlists = useSelector(state => state.reducers);
+  const playlists = useSelector(state => state.playlists);
 
   return (
     <Container>
@@ -56,7 +56,11 @@ export default function Sidebar() {
           <Nav>
             <li>
               <span>PLAYLISTS</span>
-              {/* {this.props.playlists.loading && <Loading />} */}
+
+
+
+
+
             </li>
             {playlists.data.map(playlist => (
               <li key={playlist.id}>

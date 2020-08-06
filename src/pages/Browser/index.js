@@ -1,12 +1,13 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import { Container, Title, List, Playlist } from './styles';
+import { Creators as PlaylistsActions } from '../../store/ducks/playlists';
 
 export default function Browser() {
-  const playlists = useSelector(state => state.reducers);
-
-  console.log(playlists);
+  const playlists = useSelector(state => state.playlists);
+  const dispatch = useDispatch();
+  useMemo(() => dispatch(PlaylistsActions.getPlaylistsRequest()), [dispatch]);
 
   return (
     <Container>

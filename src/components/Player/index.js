@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+// import { useSelector } from 'react-redux';
 import Slider from 'rc-slider';
 import Sound from 'react-sound';
 
@@ -7,8 +7,8 @@ import { Container, Current, Volume, Progress, Controls, Time, ProgressSlider } 
 import VolumeIcon from '../../assets/images/volume.svg';
 import ShuffleIcon from '../../assets/images/shuffle.svg';
 import BackwardIcon from '../../assets/images/backward.svg';
-import PlayIcon from '../../assets/images/play.svg';
-import PauseIcon from '../../assets/images/pause.svg';
+// import PlayIcon from '../../assets/images/play.svg';
+// import PauseIcon from '../../assets/images/pause.svg';
 import ForwardIcon from '../../assets/images/forward.svg';
 import RepeatIcon from '../../assets/images/repeat.svg';
 
@@ -26,17 +26,17 @@ export default function Player(player,
   progress,
   setVolume) {
 
-    function msToTime(duration) {
-      if (!duration) return null;
+    // function msToTime(duration) {
+    //   if (!duration) return null;
 
-      let seconds = parseInt((duration / 1000) % 60, 10);
+    //   let seconds = parseInt((duration / 1000) % 60, 10);
 
-      const minutes = parseInt((duration / (1000 * 60) % 60), 10);
+    //   const minutes = parseInt((duration / (1000 * 60) % 60), 10);
 
-      seconds = seconds < 10 ? `0${seconds}` : seconds;
+    //   seconds = seconds < 10 ? `0${seconds}` : seconds;
 
-      return `${minutes}:${seconds}`;
-    };
+    //   return `${minutes}:${seconds}`;
+    // };
 
 
   return (
