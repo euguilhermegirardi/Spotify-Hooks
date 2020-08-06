@@ -13,7 +13,7 @@ export default function Sidebar() {
       <div>
         <Nav main>
           <li>
-            <Link to="//">Navigate</Link>
+            <Link to="/">Navigate</Link>
           </li>
           <li>
             <a href="/">Radio</a>

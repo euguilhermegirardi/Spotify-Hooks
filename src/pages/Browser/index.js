@@ -15,7 +15,7 @@ export default function Browser() {
 
       <List>
       {playlists.data.map(playlist => (
-        <Playlist key={playlist.id} to={`/playlist/${playlist.id}`}>
+        <Playlist key={playlist.id} to={`/playlists/${playlist.id}`}>
           <img
             src={playlist.thumbnail}
             alt={playlist.title}

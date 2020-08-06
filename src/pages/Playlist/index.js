@@ -1,19 +1,30 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router';
 
 import { Container, Header, SongList, SongItem } from './styles';
+import { Creators as PlaylistsActions } from '../../store/ducks/playlistDetails';
 import ClockIcon from '../../assets/images/clock.svg';
 import PlusIcon from '../../assets/images/plus.svg';
 import Loading from '../../components/Loading';
 
 export default function Playlist() {
-  const [selectedSong, setSelectedSong] = useState(null);
+  const [selectedSongs, setSelectedSongs] = useState([]);
   const playlistDetails = useSelector(state => state.playlistDetails);
 
-  const renderDetails = () => {
-    const playlist = playlistDetails.data;
+  const dispatch = useDispatch();
 
-    return (
+  const { id } = useParams();
+  useMemo(() => dispatch(PlaylistsActions.getPlaylistDetailsRequest(id)), [dispatch, id]);
+
+  const playlist = playlistDetails.data;
+
+  return (
+    playlistDetails.loading ? (
+      <Container loading>
+        <Loading />
+      </Container>
+    ) : (
       <Container>
         <Header>
           <img
@@ -30,7 +41,7 @@ export default function Playlist() {
             { !!playlist.songs &&
               <button
               type="button"
-              onClick={() => loadSong(playlist.songs[0], playlist.songs)}>
+              onClick={() => this.props.loadSong(playlist.songs[0], playlist.songs)}>
                 PLAY
             </button>
             }
@@ -39,11 +50,11 @@ export default function Playlist() {
 
         <SongList cellPadding={0} cellSpacing={0}>
           <thead>
-            <th />
-            <th>Title</th>
-            <th>Artist</th>
-            <th>Album</th>
-            <th><img src={ClockIcon} alt="Duration" /></th>
+            <tr />
+            <tr><th>Title</th></tr>
+            <tr><th>Artist</th></tr>
+            <tr><th>Album</th></tr>
+            <tr><th><img src={ClockIcon} alt="Duration" /></th></tr>
           </thead>
 
           <tbody>
@@ -56,13 +67,7 @@ export default function Playlist() {
                 <SongItem
                   key={song.id}
 
-                  onClick={() => setSelectedSong({ selectedSong: song.id })}
 
-                  onDoubleClick={() => props.loadSong(song, playlist.songs)}
-
-                  selected={state.selectedSong === song.id}
-
-                  playing={props.currentSong && props.currentSong.id === song.id}
                 >
                   <td>
                     <img src={PlusIcon} alt="Add" />
@@ -77,14 +82,6 @@ export default function Playlist() {
           </tbody>
         </SongList>
       </Container>
-    );
-  }
-
-  return playlistDetails.loading ? (
-    <Container loading>
-      <Loading />
-      </Container>
-        ) : (
-      renderDetails()
-      );
+    )
+  )
 }

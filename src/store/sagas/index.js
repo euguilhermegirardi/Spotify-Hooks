@@ -3,18 +3,15 @@ import { call, put, all, takeEvery } from "redux-saga/effects";
 import api from "../../services/api";
 import { Creators as PlaylistsActions } from "../ducks/playlists";
 import { Creators as PlaylistDetailsActions } from "../ducks/playlistDetails";
-// import { Creators as ErrorActions } from "../ducks/error";
+import { Creators as ErrorActions } from "../ducks/error";
 
 function* getPlaylists() {
   try {
     const response = yield call(api.get, "/playlists");
 
-    console.log(response, 'WORKED')
-
     yield put(PlaylistsActions.getPlaylistsSuccess(response.data));
   } catch (err) {
-    console.log('PLAYLISTS ERROR')
-    // yield put(ErrorActions.setError("Was not possible to get the playlists"));
+    yield put(ErrorActions.setError("Was not possible to get the playlists"));
   }
 }
 
@@ -32,8 +29,7 @@ function* getPlaylistDetails(action) {
     yield put(PlaylistDetailsActions.getPlaylistDetailsSuccess(response.data));
   } catch (err) {
     yield put(
-      console.log('PLAYLIST DETAILS ERROR')
-      // ErrorActions.setError("Was not possible to get the playlist details.")
+      ErrorActions.setError("Was not possible to get the playlist details.")
     );
   }
 }
