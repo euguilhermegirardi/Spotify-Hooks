@@ -1,17 +1,22 @@
-import React, { useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Container, Title, List, Playlist } from './styles';
 import { Creators as PlaylistsActions } from '../../store/ducks/playlists';
+import Loading from '../../components/Loading';
 
 export default function Browser() {
   const playlists = useSelector(state => state.playlists);
+
   const dispatch = useDispatch();
-  useMemo(() => dispatch(PlaylistsActions.getPlaylistsRequest()), [dispatch]);
+  // useMemo(() => dispatch(PlaylistsActions.getPlaylistsRequest()), [dispatch]);
+  useEffect(() => {
+    dispatch(PlaylistsActions.getPlaylistsRequest())
+  },[dispatch])
 
   return (
     <Container>
-      <Title>Playlists</Title>
+      <Title>Playlists {playlists.loading && <Loading />}</Title>
 
       <List>
       {playlists.data.map(playlist => (

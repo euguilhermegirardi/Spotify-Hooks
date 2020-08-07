@@ -67,7 +67,9 @@ export default function Playlist() {
                 <SongItem
                   key={song.id}
 
+                  onClick={() => setSelectedSongs(song.id)}
 
+                  onDoubleClick={() => this.props.loadSong(song, playlist.songs)}
                 >
                   <td>
                     <img src={PlusIcon} alt="Add" />
