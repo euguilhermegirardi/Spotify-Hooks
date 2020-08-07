@@ -9,7 +9,6 @@ export default function Browser() {
   const playlists = useSelector(state => state.playlists);
 
   const dispatch = useDispatch();
-  // useMemo(() => dispatch(PlaylistsActions.getPlaylistsRequest()), [dispatch]);
   useEffect(() => {
     dispatch(PlaylistsActions.getPlaylistsRequest())
   },[dispatch])

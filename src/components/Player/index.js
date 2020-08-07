@@ -1,47 +1,69 @@
-import React from 'react';
-// import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Slider from 'rc-slider';
 import Sound from 'react-sound';
 
+import { Creators as PlayerActions } from '../../store/ducks/player';
 import { Container, Current, Volume, Progress, Controls, Time, ProgressSlider } from './styles';
 import VolumeIcon from '../../assets/images/volume.svg';
 import ShuffleIcon from '../../assets/images/shuffle.svg';
 import BackwardIcon from '../../assets/images/backward.svg';
-// import PlayIcon from '../../assets/images/play.svg';
-// import PauseIcon from '../../assets/images/pause.svg';
+import PlayIcon from '../../assets/images/play.svg';
+import PauseIcon from '../../assets/images/pause.svg';
 import ForwardIcon from '../../assets/images/forward.svg';
 import RepeatIcon from '../../assets/images/repeat.svg';
 
-export default function Player(player,
-  play,
-  pause,
-  next,
-  prev,
-  playing,
-  position,
-  duration,
-  handlePosition,
-  setPosition,
-  positionShown,
-  progress,
-  setVolume) {
-
-    // function msToTime(duration) {
-    //   if (!duration) return null;
-
-    //   let seconds = parseInt((duration / 1000) % 60, 10);
-
-    //   const minutes = parseInt((duration / (1000 * 60) % 60), 10);
-
-    //   seconds = seconds < 10 ? `0${seconds}` : seconds;
-
-    //   return `${minutes}:${seconds}`;
-    // };
+export default function Player() {
+  const player = useSelector(state => state.player);
+  const position = useSelector(state => msToTime(state.player.position));
+  const duration = useSelector(state => msToTime(state.player.duration));
+  const positionShown = useSelector(state => msToTime(state.player.positionShown));
+  const progress = useSelector(state => parseInt( state.player.positionShown || state.player.position ) * ( 1000 / state.player.duration), 10,) || 0;
 
 
-  return (
+
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(
+  //     PlayerActions.loadSong(),
+  //     PlayerActions.play(),
+  //     PlayerActions.pause(),
+  //     PlayerActions.next(),
+  //     PlayerActions.prev(),
+  //     PlayerActions.playing(),
+  //     PlayerActions.handlePosition(),
+  //     PlayerActions.setPosition(),
+  //     PlayerActions.setVolume(),
+  //     PlayerActions.repeat())
+  // },[dispatch])
+
+
+
+
+  function msToTime(duration) {
+    if (!duration) return null;
+
+    let seconds = parseInt((duration / 1000) % 60, 10);
+
+    const minutes = parseInt((duration / (1000 * 60) % 60), 10);
+
+    seconds = seconds < 10 ? `0${seconds}` : seconds;
+
+    return `${minutes}:${seconds}`;
+  };
+
+  const Player =({
+    next,
+    playing,
+    prev,
+    pause,
+    play,
+    setVolume,
+    handlePosition,
+    setPosition
+  }) => (
     <Container>
-    { !!player.currentSong && (
+      { !!player.currentSong && (
       <Sound
         url={player.currentSong.file}
         playStatus={player.status}
@@ -53,7 +75,7 @@ export default function Player(player,
     )}
 
     <Current>
-      {/* { !!player.currentSong && (
+      { !!player.currentSong && (
         <>
           <img
             src={player.currentSong.thumbnail}
@@ -64,7 +86,7 @@ export default function Player(player,
             <small>{player.currentSong.author}</small>
           </div>
         </>
-      )} */}
+      )}
     </Current>
 
     <Progress>
@@ -77,7 +99,7 @@ export default function Player(player,
           <img src={BackwardIcon} alt="Backward" />
         </button>
 
-        {/* { !!player.currentSong && player.status === Sound.status.PLAYING ? (
+        { !!player.currentSong && player.status === Sound.status.PLAYING ? (
           <button type="button" onClick={pause} >
             <img src={PauseIcon} alt="Pause" />
           </button>
@@ -85,7 +107,7 @@ export default function Player(player,
           <button type="button" onClick={play}>
             <img src={PlayIcon} alt="Play" />
           </button>
-        )} */}
+        )}
 
         <button type="button" onClick={next}>
           <img src={ForwardIcon} alt="Forward" />
@@ -123,9 +145,13 @@ export default function Player(player,
         onChange={setVolume}
       />
     </Volume>
+    </Container>
+  )
 
-  </Container>
+  return (
+    <Player />
   )
 }
+
 
 

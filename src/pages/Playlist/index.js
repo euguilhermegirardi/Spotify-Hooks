@@ -1,23 +1,31 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 
 import { Container, Header, SongList, SongItem } from './styles';
 import { Creators as PlaylistsActions } from '../../store/ducks/playlistDetails';
+import { Creators as PlayerActions } from '../../store/ducks/player';
 import ClockIcon from '../../assets/images/clock.svg';
 import PlusIcon from '../../assets/images/plus.svg';
 import Loading from '../../components/Loading';
 
 export default function Playlist() {
-  const [selectedSongs, setSelectedSongs] = useState([]);
+  const [selectedSong, setSelectedSong] = useState(null);
   const playlistDetails = useSelector(state => state.playlistDetails);
-
-  const dispatch = useDispatch();
+  const playlist = playlistDetails.data;
+  // const player = useSelector(state => state.player)
+  const currentSong = useSelector(state => state.player.currentSong)
 
   const { id } = useParams();
+
+  const dispatch = useDispatch();
   useMemo(() => dispatch(PlaylistsActions.getPlaylistDetailsRequest(id)), [dispatch, id]);
 
-  const playlist = playlistDetails.data;
+  // useEffect((prevProps, id) => {
+  //   if(prevProps.id !== this.id) {
+  //     dispatch(PlaylistsActions.getPlaylistDetailsRequest(id))
+  //   }
+  // }, [dispatch, id])
 
   return (
     playlistDetails.loading ? (
@@ -41,7 +49,7 @@ export default function Playlist() {
             { !!playlist.songs &&
               <button
               type="button"
-              onClick={() => this.props.loadSong(playlist.songs[0], playlist.songs)}>
+              onClick={() => dispatch(PlayerActions.loadSong(playlist.songs[0], playlist.songs))}>
                 PLAY
             </button>
             }
@@ -67,9 +75,13 @@ export default function Playlist() {
                 <SongItem
                   key={song.id}
 
-                  onClick={() => setSelectedSongs(song.id)}
+                  onClick={() => setSelectedSong(song.id)}
 
-                  onDoubleClick={() => this.props.loadSong(song, playlist.songs)}
+                  onDoubleClick={() => dispatch(PlayerActions.loadSong(song, playlist.songs))}
+
+                  selected={selectedSong === song.id}
+
+                  playing={currentSong && currentSong.id === song.id}
                 >
                   <td>
                     <img src={PlusIcon} alt="Add" />
