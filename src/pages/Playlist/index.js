@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 
@@ -17,9 +17,10 @@ export default function Playlist() {
   const currentSong = useSelector(state => state.player.currentSong)
 
   const { id } = useParams();
-
   const dispatch = useDispatch();
-  useMemo(() => dispatch(PlaylistsActions.getPlaylistDetailsRequest(id)), [dispatch, id]);
+  useEffect(() => {
+    dispatch(PlaylistsActions.getPlaylistDetailsRequest(id))
+  }, [dispatch, id])
 
   // useEffect((prevProps, id) => {
   //   if(prevProps.id !== this.id) {

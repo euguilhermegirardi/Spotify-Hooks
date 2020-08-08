@@ -16,29 +16,19 @@ import RepeatIcon from '../../assets/images/repeat.svg';
 export default function Player() {
   const player = useSelector(state => state.player);
   const position = useSelector(state => msToTime(state.player.position));
-  const duration = useSelector(state => msToTime(state.player.duration));
+  const duration = useSelector(state => msToTime(state.duration));
   const positionShown = useSelector(state => msToTime(state.player.positionShown));
-  const progress = useSelector(state => parseInt( state.player.positionShown || state.player.position ) * ( 1000 / state.player.duration), 10,) || 0;
+  const progress = useSelector(state => parseInt(
+    state.player.positionShown || state.player.position ) * ( 1000 / state.player.duration), 10,) || 0;
+  const volume = player.volume;
 
+  console.log(player.status)
+  console.log(position)
+  console.log(duration)
+  console.log(positionShown)
+  console.log(volume)
 
-
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   dispatch(
-  //     PlayerActions.loadSong(),
-  //     PlayerActions.play(),
-  //     PlayerActions.pause(),
-  //     PlayerActions.next(),
-  //     PlayerActions.prev(),
-  //     PlayerActions.playing(),
-  //     PlayerActions.handlePosition(),
-  //     PlayerActions.setPosition(),
-  //     PlayerActions.setVolume(),
-  //     PlayerActions.repeat())
-  // },[dispatch])
-
-
-
+  const dispatch = useDispatch();
 
   function msToTime(duration) {
     if (!duration) return null;
@@ -52,25 +42,17 @@ export default function Player() {
     return `${minutes}:${seconds}`;
   };
 
-  const Player =({
-    next,
-    playing,
-    prev,
-    pause,
-    play,
-    setVolume,
-    handlePosition,
-    setPosition
-  }) => (
+  const Player = () => (
+
     <Container>
       { !!player.currentSong && (
       <Sound
         url={player.currentSong.file}
         playStatus={player.status}
-        onFinishedPlaying={next}
-        onPlaying={playing}
-        position={player.position}
-        volume={player.volume}
+        onFinishedPlaying={() => dispatch(PlayerActions.next())}
+        // onPlaying={() => dispatch(PlayerActions.playing())}
+        // position={position}
+        // volume={player.volume}
       />
     )}
 
@@ -95,25 +77,25 @@ export default function Player() {
           <img src={ShuffleIcon} alt="Shuffle" />
         </button>
 
-        <button type="button" onClick={prev}>
+        <button type="button" onClick={() => dispatch(PlayerActions.prev())}>
           <img src={BackwardIcon} alt="Backward" />
         </button>
 
         { !!player.currentSong && player.status === Sound.status.PLAYING ? (
-          <button type="button" onClick={pause} >
+          <button type="button" onClick={() => dispatch(PlayerActions.pause())} >
             <img src={PauseIcon} alt="Pause" />
           </button>
         ) : (
-          <button type="button" onClick={play}>
+          <button type="button" onClick={() => dispatch(PlayerActions.play())}>
             <img src={PlayIcon} alt="Play" />
           </button>
         )}
 
-        <button type="button" onClick={next}>
+        <button type="button" onClick={() => dispatch(PlayerActions.next())}>
           <img src={ForwardIcon} alt="Forward" />
         </button>
 
-        <button type="button">
+        <button type="button" onClick={() => dispatch(PlayerActions.repeat())}>
           <img src={RepeatIcon} alt="Repeat" />
         </button>
       </Controls>
@@ -126,8 +108,8 @@ export default function Player() {
             trackStyle={{ background: '#1ED760' }}
             handleStyle={{ border: 0 }}
             max={1000}
-            onChange={value => handlePosition( value / 1000 )}
-            onAfterChange={value => setPosition( value / 1000 )}
+            onChange={value => dispatch(PlayerActions.handlePosition( value / 1000 ))}
+            onAfterChange={value => dispatch(PlayerActions.setPosition( value / 1000 ))}
             value={progress}
           />
         </ProgressSlider>
@@ -141,8 +123,8 @@ export default function Player() {
         railStyle={{ background: '#404040', borderRadius: 10 }}
         trackStyle={{ background: '#FFF' }}
         handleStyle={{ display: 'none' }}
-        value={player.volume}
-        onChange={setVolume}
+        value={volume}
+        onChange={() => dispatch(PlayerActions.setVolume(volume))}
       />
     </Volume>
     </Container>
