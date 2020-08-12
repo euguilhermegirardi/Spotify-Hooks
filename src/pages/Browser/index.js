@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { Container, Title, List, Playlist } from './styles';
-import { Creators as PlaylistsActions } from '../../store/ducks/playlists';
+import { getPlaylistsRequest } from '../../store/modules/main/actions';
 import Loading from '../../components/Loading';
 
 export default function Browser() {
@@ -10,7 +10,7 @@ export default function Browser() {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(PlaylistsActions.getPlaylistsRequest())
+    dispatch(getPlaylistsRequest())
   },[dispatch])
 
   return (

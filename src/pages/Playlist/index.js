@@ -3,8 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 
 import { Container, Header, SongList, SongItem } from './styles';
-import { Creators as PlaylistsActions } from '../../store/ducks/playlistDetails';
-import { Creators as PlayerActions } from '../../store/ducks/player';
+import { getPlaylistDetailsRequest, loadSong } from '../../store/modules/main/actions';
 import ClockIcon from '../../assets/images/clock.svg';
 import PlusIcon from '../../assets/images/plus.svg';
 import Loading from '../../components/Loading';
@@ -13,20 +12,13 @@ export default function Playlist() {
   const [selectedSong, setSelectedSong] = useState(null);
   const playlistDetails = useSelector(state => state.playlistDetails);
   const playlist = playlistDetails.data;
-  // const player = useSelector(state => state.player)
   const currentSong = useSelector(state => state.player.currentSong)
 
   const { id } = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(PlaylistsActions.getPlaylistDetailsRequest(id))
+    dispatch(getPlaylistDetailsRequest(id))
   }, [dispatch, id])
-
-  // useEffect((prevProps, id) => {
-  //   if(prevProps.id !== this.id) {
-  //     dispatch(PlaylistsActions.getPlaylistDetailsRequest(id))
-  //   }
-  // }, [dispatch, id])
 
   return (
     playlistDetails.loading ? (
@@ -50,7 +42,7 @@ export default function Playlist() {
             { !!playlist.songs &&
               <button
               type="button"
-              onClick={() => dispatch(PlayerActions.loadSong(playlist.songs[0], playlist.songs))}>
+              onClick={() => dispatch(loadSong(playlist.songs[0], playlist.songs))}>
                 PLAY
             </button>
             }
@@ -78,7 +70,7 @@ export default function Playlist() {
 
                   onClick={() => setSelectedSong(song.id)}
 
-                  onDoubleClick={() => dispatch(PlayerActions.loadSong(song, playlist.songs))}
+                  onDoubleClick={() => dispatch(loadSong(song, playlist.songs))}
 
                   selected={selectedSong === song.id}
 

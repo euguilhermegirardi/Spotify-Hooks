@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Slider from 'rc-slider';
 import Sound from 'react-sound';
 
-import { Creators as PlayerActions } from '../../store/ducks/player';
+import { next, playing, prev, pause, play, repeat, handlePosition, setPosition } from '../../store/modules/main/actions';
 import { Container, Current, Volume, Progress, Controls, Time, ProgressSlider } from './styles';
 import VolumeIcon from '../../assets/images/volume.svg';
 import ShuffleIcon from '../../assets/images/shuffle.svg';
@@ -15,18 +15,13 @@ import RepeatIcon from '../../assets/images/repeat.svg';
 
 export default function Player() {
   const player = useSelector(state => state.player);
-  const position = useSelector(state => msToTime(state.player.position));
-  const duration = useSelector(state => msToTime(state.duration));
-  const positionShown = useSelector(state => msToTime(state.player.positionShown));
-  const progress = useSelector(state => parseInt(
-    state.player.positionShown || state.player.position ) * ( 1000 / state.player.duration), 10,) || 0;
-  const volume = player.volume;
-
-  console.log(player.status)
-  console.log(position)
-  console.log(duration)
-  console.log(positionShown)
-  console.log(volume)
+  const position = msToTime(player.position);
+  const duration = msToTime(player.duration);
+  const positionShown = msToTime(player.positionShown);
+  const progress = parseInt(
+    (positionShown || position ) * (1000 / duration),
+    10,
+    ) || 0
 
   const dispatch = useDispatch();
 
@@ -49,8 +44,8 @@ export default function Player() {
       <Sound
         url={player.currentSong.file}
         playStatus={player.status}
-        onFinishedPlaying={() => dispatch(PlayerActions.next())}
-        // onPlaying={() => dispatch(PlayerActions.playing())}
+        onFinishedPlaying={() => dispatch(next())}
+          onPlaying={() => dispatch(playing({position, duration}))}
         // position={position}
         // volume={player.volume}
       />
@@ -77,56 +72,56 @@ export default function Player() {
           <img src={ShuffleIcon} alt="Shuffle" />
         </button>
 
-        <button type="button" onClick={() => dispatch(PlayerActions.prev())}>
+        <button type="button" onClick={() => dispatch(prev())}>
           <img src={BackwardIcon} alt="Backward" />
         </button>
 
         { !!player.currentSong && player.status === Sound.status.PLAYING ? (
-          <button type="button" onClick={() => dispatch(PlayerActions.pause())} >
+          <button type="button" onClick={() => dispatch(pause())} >
             <img src={PauseIcon} alt="Pause" />
           </button>
         ) : (
-          <button type="button" onClick={() => dispatch(PlayerActions.play())}>
+          <button type="button" onClick={() => dispatch(play())}>
             <img src={PlayIcon} alt="Play" />
           </button>
         )}
 
-        <button type="button" onClick={() => dispatch(PlayerActions.next())}>
+        <button type="button" onClick={() => dispatch(next())}>
           <img src={ForwardIcon} alt="Forward" />
         </button>
 
-        <button type="button" onClick={() => dispatch(PlayerActions.repeat())}>
+        <button type="button" onClick={() => dispatch(repeat())}>
           <img src={RepeatIcon} alt="Repeat" />
         </button>
       </Controls>
 
       <Time>
         <span>{positionShown || position}</span>
-        <ProgressSlider>
+        {/* <ProgressSlider>
           <Slider
             railStyle={{ background: '#404040', borderRadius: 10 }}
             trackStyle={{ background: '#1ED760' }}
             handleStyle={{ border: 0 }}
             max={1000}
-            onChange={value => dispatch(PlayerActions.handlePosition( value / 1000 ))}
-            onAfterChange={value => dispatch(PlayerActions.setPosition( value / 1000 ))}
+            onChange={value => dispatch(handlePosition( value / 1000 ))}
+            onAfterChange={value => dispatch(setPosition( value / 1000 ))}
             value={progress}
           />
-        </ProgressSlider>
+        </ProgressSlider> */}
           <span>{duration}</span>
       </Time>
     </Progress>
 
-    <Volume>
+    {/* <Volume>
       <img src={VolumeIcon} alt="Volume" />
       <Slider
         railStyle={{ background: '#404040', borderRadius: 10 }}
         trackStyle={{ background: '#FFF' }}
         handleStyle={{ display: 'none' }}
-        value={volume}
-        onChange={() => dispatch(PlayerActions.setVolume(volume))}
+        // value={volume}
+        // onChange={() => dispatch(PlayerActions.setVolume(volume))}
       />
-    </Volume>
+    </Volume> */}
     </Container>
   )
 
